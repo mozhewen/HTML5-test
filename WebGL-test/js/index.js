@@ -1,8 +1,8 @@
 // 全局变量
 var canvas, cw, ch, aspectRatio = 16/9, gl;
 var scene = {
-    perspMatrix: [],
-    viewMatrix: [],
+    perspMatrix: [],    // 从视图坐标射影变换到裁剪坐标，产生透视效果
+    viewMatrix: [],     // 从世界坐标旋转到视图坐标（以相机为原点)
     objList: [],
     draw: function() {},
     update: function() {},
@@ -15,14 +15,13 @@ function entry(){
     canvas = document.getElementById("canvas");
     gl = canvas.getContext("experimental-webgl");
     if (!gl) {
-        alert("There's no WebGL context available.");
+        alert("There's no WebGL context available. ");
         return;
     }
 
     // 初始化画布
     resizeCanvas();
-    window.addEventListener('resize', resizeCanvas, true);
-    //window.onresize = resizeCanvas;
+    window.onresize = resizeCanvas;
 
     // 开始动画
     animate();  // 用于更新图像
@@ -54,7 +53,7 @@ function animate() {
     scene.draw();
 }
 
-// 定时更新函数
+// 时间演化函数
 function elapse() {
     setTimeout(elapse, 1000/scene.fps);
     scene.update();

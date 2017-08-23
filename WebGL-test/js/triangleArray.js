@@ -1,4 +1,5 @@
-function triangleArray() {
+// 三角形阵列对象
+function TriangleArray() {
     this.vertexBuffer = gl.createBuffer(),
     this.vertexColorBuffer = gl.createBuffer();
     // 用于.draw
@@ -10,7 +11,7 @@ function triangleArray() {
     this.length = this.element.length;
 }
 
-triangleArray.prototype.push = function (pos, dir, size, color, posUpdateAngles, dirUpdateAngles) {
+TriangleArray.prototype.push = function (pos, dir, size, color, posUpdateAngles, dirUpdateAngles) {
     var dirMatrix = orthogonalMatrix4(dir, [0, 0, 0]);
     this.element.push({
         pos: pos,
@@ -29,16 +30,20 @@ triangleArray.prototype.push = function (pos, dir, size, color, posUpdateAngles,
     this.length = this.element.length;
 }
 
-triangleArray.prototype.draw = function () {
+TriangleArray.prototype.setup = function() {
+    // 静态数据只写入缓冲区一次
+    writeArrayBuffer(gl, this.vertexColorBuffer, this.vertexColorArray, gl.STATIC_DRAW);
+}
+
+TriangleArray.prototype.draw = function () {
     writeArrayBuffer(gl, this.vertexBuffer, this.vertexArray, gl.DYNAMIC_DRAW);
     associateVertexAttribWithBuffer(gl, gl.program, "aVertexPosition", this.vertexBuffer, 4, gl.FLOAT, 0, 0);
-    writeArrayBuffer(gl, this.vertexColorBuffer, this.vertexColorArray, gl.DYNAMIC_DRAW);
     associateVertexAttribWithBuffer(gl, gl.program, "aVertexColor", this.vertexColorBuffer, 3, gl.FLOAT, 0, 0);
 
     gl.drawArrays(gl.TRIANGLES, 0, this.length*3);
 }
 
-triangleArray.prototype.update = function () {
+TriangleArray.prototype.update = function () {
     for (var i = 0; i < this.length; i++) {
         // 更新坐标与朝向
         this.element[i].pos = transform43(this.element[i].posUpdateMatrix, this.element[i].pos);

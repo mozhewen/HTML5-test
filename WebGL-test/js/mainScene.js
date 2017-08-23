@@ -2,12 +2,12 @@
 function load_maniScene() {
     var vertexShaderScript = new Object(), fragmentShaderScript = new Object();
     var remain = {num:2}, 
-        onloadend = function() {
+        onfinishFunc = function() {
             gl.program = createProgram(gl, vertexShaderScript, fragmentShaderScript);
             mainScene();
         };
-    loadShaderFile('shaders/vshader.vert', vertexShaderScript, remain, onloadend);
-    loadShaderFile('shaders/fshader.frag', fragmentShaderScript, remain, onloadend);
+    loadTextFile('shaders/vshader.vert', vertexShaderScript, remain, onfinishFunc, function() {});
+    loadTextFile('shaders/fshader.frag', fragmentShaderScript, remain, onfinishFunc, function() {});
 }
 
 // 主函数
@@ -45,8 +45,8 @@ function setup_mainScene() {
     scene.viewMatrix = orthogonalMatrix4([0, 0, 0], [0, 0, 1.5]);
     scene.rotatingMatrix = identityMatrix4();
     scene.rotationMatrix = identityMatrix4();
-    //   三角形数列
-    var triArray = new triangleArray();
+    //   三角形阵列
+    var triArray = new TriangleArray();
     for (var i=0; i<300; i++) {
         var r = pow(rand(), 1/3),
             theta = acos(rand(-1, 1)),
@@ -57,8 +57,8 @@ function setup_mainScene() {
             dirUpdateAngles = [rand(-1, 1)*PI/scene.fps/30, rand(-1, 1)*PI/scene.fps/30, rand(-1, 1)*PI/scene.fps/30];
             triArray.push(pos, dir, 0.025, HSV2RGB([rand(), 0.8, 1.0]), posUpdateAngles, dirUpdateAngles);
     }
+    triArray.setup();
     scene.objList.push(triArray);
-    
 }
 
 // 主绘图函数
@@ -69,23 +69,26 @@ function draw_mainScene() {
     // 2. 使用着色程序
     gl.useProgram(gl.program);
 
-    // 3. 观察点设置
-    var ProjMatrix = multiply4(
+    // 3. Uniform变量设置
+    //   世界坐标到裁剪坐标
+    associateUniformMatrix4WithData(gl, gl.program, 'uProjMatrix', multiply4(
         scene.perspMatrix, 
         scene.viewMatrix
-    );
-    associateUniformMatrix4WithData(gl, gl.program, 'uProjMatrix', ProjMatrix);
+    ));
+    //   局部坐标到世界坐标
     associateUniformMatrix4WithData(gl, gl.program, 'uModelMatrix',multiply4(
         scene.rotatingMatrix,
         scene.rotationMatrix
     ));
+    //   观察点的世界坐标
     associateUniform4WithData(gl, gl.program, 'uEye', [
         -scene.viewMatrix[12],
         -scene.viewMatrix[13],
         -scene.viewMatrix[14],
         -scene.viewMatrix[15]
     ]);
-    associateUniform2WithData(gl, gl.program, 'uFogRange', [1.5, 3.0]);
+    //   远处雾化
+    associateUniform2WithData(gl, gl.program, 'uFogRange', [1.0, 2.5]);
 
     // 4. 绘制对象
     for (var i = 0; i < scene.objList.length; i++) {
@@ -96,7 +99,7 @@ function draw_mainScene() {
 }
 
 // 主更新函数
-function update_mainScene(){
+function update_mainScene() {
     // 1. 检测触发事件（例如：碰撞检测）
 
     // 2. 更新对象

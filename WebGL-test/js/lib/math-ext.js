@@ -42,7 +42,7 @@ function v3Tov4(x) {
  * 
  * @param {Array} A 4*4矩阵
  * @param {Array} x 3维矢量，假设x3=1
- * @return A*x的值
+ * @return 3维矢量，A*x的值
  */
 function transform43(A, x) {
     var y = new Array();
@@ -107,7 +107,7 @@ function identityMatrix4() {
 /**
  * 构造正交矩阵
  * 
- * 旋转部分采用X1Y2Z3形式（分别表示绕XYZ轴旋转），先旋转后平移(https://en.wikipedia.org/wiki/Euler_angles)
+ * 旋转部分采用X1Y2Z3形式(分别表示绕XYZ轴旋转)(https://en.wikipedia.org/wiki/Euler_angles)，先旋转后平移
  * 
  * @param {Array} TBAngles Tait-Bryan角alpha, beta, gamma
  * @param {Array} displacement 平移方向

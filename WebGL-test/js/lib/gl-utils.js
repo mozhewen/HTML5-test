@@ -1,18 +1,24 @@
 /**
- * 加载着色器源文件（异步!）
+ * 加载文本文件（异步!）
  * 
- * @param fileName 着色器文件地址
- * @param Script 结果输出到Script对象的text属性中
- * @param remain 剩余
- * @param onloadend
+ * @param {string} fileName     源代码文件地址
+ * @param source                结果输出到source对象的text属性中
+ * @param remain                剩余文件请求数量
+ * @param {function} onfinish   函数，加载完毕后执行
+ * @param {function} onabort    函数，加载中断时执行
  */
-function loadShaderFile(fileName, Script, remain, onloadend) {
+function loadTextFile(fileName, source, remain, onfinish, onabort) {
     var request = new XMLHttpRequest();
     request.onload = function() {
-        Script.text = request.responseText;
-        
-        remain.num--;
-        if (remain.num == 0) onloadend();
+        if (request.status == 200) {
+            source.text = request.responseText;
+            remain.num--;
+            if (remain.num == 0) onfinish();
+        } else {
+            alert('Request: ' + fileName +'\n' + 
+                request.status.toString() + ' - ' + request.statusText);
+            onabort(/**/);
+        }
     };
     request.open('GET', fileName, true);
     request.send();
@@ -23,9 +29,9 @@ function loadShaderFile(fileName, Script, remain, onloadend) {
  * 
  * 着色器代码保存在*ShaderScript对象的text属性中
  * 
- * @param gl WebGL环境
- * @param vertexShaderScript 顶点着色器脚本
- * @param fragmentShaderScript 片元着色器脚本
+ * @param gl                    WebGL环境
+ * @param vertexShaderScript    顶点着色器脚本
+ * @param fragmentShaderScript  片元着色器脚本
  * @return program
  */
 function createProgram(gl, vertexShaderScript, fragmentShaderScript) {
@@ -65,10 +71,10 @@ function createProgram(gl, vertexShaderScript, fragmentShaderScript) {
 /**
  * 将数据写入数组缓冲区
  * 
- * @param gl WebGL环境
- * @param arrayBuffer 缓冲区对象
- * @param bufferData 待写入缓冲区的数据
- * @param type 缓冲区数据类型
+ * @param gl                    WebGL环境
+ * @param arrayBuffer           缓冲区对象
+ * @param {Array} bufferData    待写入缓冲区的数据
+ * @param type                  缓冲区数据类型
  */
 function writeArrayBuffer(gl, arrayBuffer, bufferData, type) {
     fData= new Float32Array(bufferData);
@@ -76,25 +82,25 @@ function writeArrayBuffer(gl, arrayBuffer, bufferData, type) {
     gl.bufferData(gl.ARRAY_BUFFER, fData, type);
 }
 
-function associateVertexAttribWithBuffer(gl, program, AttribName, arrayBuffer, size, type, stride, offset) {
+function associateVertexAttribWithBuffer(gl, program, attribName, arrayBuffer, size, type, stride, offset) {
     gl.bindBuffer(gl.ARRAY_BUFFER, arrayBuffer);
-    var AttribLocation = gl.getAttribLocation(program, AttribName);
-    gl.enableVertexAttribArray(AttribLocation);
-    gl.vertexAttribPointer(AttribLocation, size, type, false, stride, offset);
+    var attribLocation = gl.getAttribLocation(program, attribName);
+    gl.enableVertexAttribArray(attribLocation);
+    gl.vertexAttribPointer(attribLocation, size, type, false, stride, offset);
 }
 
 // 其他类似的函数只需把数字改一下
-function associateUniform2WithData(gl, program, UniformName, UniformData) {
-    var UniformLocation = gl.getUniformLocation(program, UniformName);
-    gl.uniform2f(UniformLocation, ...UniformData);
+function associateUniform2WithData(gl, program, uniformName, uniformData) {
+    var uniformLocation = gl.getUniformLocation(program, uniformName);
+    gl.uniform2f(uniformLocation, ...uniformData);
 }
 
-function associateUniform4WithData(gl, program, UniformName, UniformData) {
-    var UniformLocation = gl.getUniformLocation(program, UniformName);
-    gl.uniform4f(UniformLocation, ...UniformData);
+function associateUniform4WithData(gl, program, uniformName, uniformData) {
+    var uniformLocation = gl.getUniformLocation(program, uniformName);
+    gl.uniform4f(uniformLocation, ...uniformData);
 }
 
-function associateUniformMatrix4WithData(gl, program, UniformName, UniformData) {
-    var UniformLocation = gl.getUniformLocation(program, UniformName);
-    gl.uniformMatrix4fv(UniformLocation, false, new Float32Array(UniformData));
+function associateUniformMatrix4WithData(gl, program, uniformName, uniformData) {
+    var uniformLocation = gl.getUniformLocation(program, uniformName);
+    gl.uniformMatrix4fv(uniformLocation, false, new Float32Array(uniformData));
 }

@@ -2,14 +2,14 @@ html, body {
     margin: 0;                  /* 外边距 */
     border-style: none;         /* 边框 */
     padding: 0;                 /* 内边距 */
-    width: 100%;                /* 相对窗口宽度 */
-    height: 100%;               /* 相对窗口宽度 */
+    width: 100%;
+    height: 100%;
 }
 
 body {
     display:-webkit-box;        /* 针对Webkit内核浏览器 */
     display:-webkit-flex;       /* 针对Webkit内核浏览器 */
     display: flex;
-    align-items: center;        /* 定义body的元素垂直居中 */
-    justify-content: center;    /* 定义body的里的元素水平居中 */
+    align-items: center;        /* 定义body里的元素垂直居中 */
+    justify-content: center;    /* 定义body里的元素水平居中 */
 }

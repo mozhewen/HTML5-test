@@ -3,26 +3,33 @@
 <head>
     <meta charset="utf-8">
     <title>Canvas - WebGL 测试</title>
-    <link rel="stylesheet" href="css/style.css"> <!-- CSS样式表 -->
+    <!-- CSS样式表 -->
+    <link rel="stylesheet" href="css/style.css">
 </head>
 <body onload="entry()">
     <!-- 画布 -->
     <canvas id="canvas">
-        Your browser does not surpport "canvas" tag.
+        Your browser does not surpport "canvas" tag. 
     </canvas>
 
     <!-- js代码 -->
+    <!--   针对移动端页面自适应的优化   -->
     <script type="text/javascript">
         document.write('<meta name="viewport" '+
         'content="width=device-width,initial-scale='+1/window.devicePixelRatio.toString()+
         ',maximum-scale='+1/window.devicePixelRatio.toString()+
         ',minimum-scale='+1/window.devicePixelRatio.toString()+
         ',user-scalable=no">');
-    </script> <!-- 针对移动端页面适应的优化 -->
-    <script type="text/javascript" src="js/lib/math-ext.js"></script> <!-- 数学库 -->
-    <script type="text/javascript" src="js/lib/gl-utils.js"></script> <!-- GL封装 -->
-    <script type="text/javascript" src="js/index.js"></script> <!-- 程序入口 -->
-    <script type="text/javascript" src="js/triangleArray.js"></script> <!-- 三角形数组对象 -->
-    <script type="text/javascript" src="js/mainScene.js"></script> <!-- 主场景 -->
+    </script>
+    <!--   数学库   -->
+    <script type="text/javascript" src="js/lib/math-ext.js"></script>
+    <!--   GL封装   -->
+    <script type="text/javascript" src="js/lib/gl-utils.js"></script>
+    <!--   程序入口   -->
+    <script type="text/javascript" src="js/index.js"></script>
+    <!--   三角形阵列对象   -->
+    <script type="text/javascript" src="js/triangleArray.js"></script>
+    <!-- 主场景 -->
+    <script type="text/javascript" src="js/mainScene.js"></script>
 </body>
 </html>
