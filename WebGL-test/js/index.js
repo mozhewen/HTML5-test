@@ -1,5 +1,5 @@
 // 全局变量
-var canvas, cw, ch, aspectRatio = 16/9, gl;
+var canvas, cw, ch, aspectRatio/* = 16/9*/, gl;
 var scene = {
     perspMatrix: [],    // 从视图坐标射影变换到裁剪坐标，产生透视效果
     viewMatrix: [],     // 从世界坐标旋转到视图坐标（以相机为原点)
@@ -35,11 +35,12 @@ function entry(){
 function resizeCanvas() {
     cw = window.innerWidth;
     ch = window.innerHeight;
-    if (cw/ch > aspectRatio) {
+    /*if (cw/ch > aspectRatio) {
         cw = ch*aspectRatio;
     } else if (cw/ch < aspectRatio) {
         ch = cw/aspectRatio;
-    }
+    }*/
+    aspectRatio=cw/ch;
     canvas.width = cw;
     canvas.height = ch;
     gl.viewport(0, 0, cw, ch); // 定义GL视口位置

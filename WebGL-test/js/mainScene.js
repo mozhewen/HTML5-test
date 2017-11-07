@@ -21,12 +21,12 @@ function mainScene() {
     scene.fps = 30;
 
     // 3. 事件响应函数
-    canvas.addEventListener('mousedown', mousedownFunc);
+    //canvas.addEventListener('mousedown', mousedownFunc);
     canvas.addEventListener('touchstart', touchstartFunc);
-    canvas.addEventListener('mousemove', mousemoveFunc);
-    canvas.addEventListener('touchmove', touchmoveFunc);
+    window.addEventListener('mousemove', mousemoveFunc);
+    window.addEventListener('touchmove', touchmoveFunc);
     //   注意这里用window的mouseup事件，以处理用户将鼠标移开canvas后释放的情况
-    window.addEventListener('mouseup', mouseupFunc);
+    //window.addEventListener('mouseup', mouseupFunc);
     window.addEventListener('touchend', touchendFunc);
 }
 
@@ -41,7 +41,7 @@ function setup_mainScene() {
 
     // 2. 对象设置
     //   观察角度设置
-    scene.perspMatrix = perspectiveMatrix4(PI/4, aspectRatio, 0.1, 10);
+    //scene.perspMatrix = perspectiveMatrix4(PI/4, aspectRatio, 0.1, 10);
     scene.viewMatrix = orthogonalMatrix4([0, 0, 0], [0, 0, 1.5]);
     scene.rotatingMatrix = identityMatrix4();
     scene.rotationMatrix = identityMatrix4();
@@ -70,6 +70,8 @@ function draw_mainScene() {
     gl.useProgram(gl.program);
 
     // 3. Uniform变量设置
+    //   设置透视矩阵
+    scene.perspMatrix = perspectiveMatrix4(PI/4, aspectRatio, 0.1, 10);
     //   世界坐标到裁剪坐标
     associateUniformMatrix4WithData(gl, gl.program, 'uProjMatrix', multiply4(
         scene.perspMatrix, 
@@ -106,10 +108,18 @@ function update_mainScene() {
     for (var i = 0; i < scene.objList.length; i++) {
         scene.objList[i].update();
     }
+
+    //+3. 更新旋转矩阵
+    scene.rotationMatrix = multiply4(
+        scene.rotatingMatrix,
+        scene.rotationMatrix
+    );
 }
 
 // 事件响应函数
 var lastMouseX = -1, lastMouseY =-1, draging = false;
+//   PC端
+/*     依靠鼠标拖动移动
 function mousedownFunc(event) {
     lastMouseX = event.clientX;
     lastMouseY = event.clientY;
@@ -136,7 +146,18 @@ function mouseupFunc(event) {
         scene.rotatingMatrix = identityMatrix4();
     }
 }
+*/
 
+//     沿着鼠标放置位置移动
+function mousemoveFunc(event) {
+    var x = event.offsetX, y = event.offsetY;
+    var factor = PI/4/ch/scene.fps/2;
+    var alpha = factor*(y-ch/2), beta = factor*(x-cw/2);
+    // 注意这里绕x轴旋转其实改变的是y方向，x轴不变；y轴同理
+    scene.rotatingMatrix = orthogonalMatrix4([alpha, beta, 0], [0, 0, 0]);
+}
+
+//   移动端
 function touchstartFunc(event) {
     if (event.targetTouches.length == 1) {
         lastMouseX = event.targetTouches[0].clientX;
