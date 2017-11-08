@@ -170,7 +170,7 @@ function touchmoveFunc(event) {
     var x = event.targetTouches[0].clientX, y = event.targetTouches[0].clientY;
     if (event.targetTouches.length == 1) {
         if (draging) {
-            var factor = PI/4/ch;
+            var factor = PI/4/chscene.fps;
             var alpha = factor*(y-lastMouseY), beta = factor*(x-lastMouseX);
             // 注意这里绕x轴旋转其实改变的是y方向，x轴不变；y轴同理
             scene.rotatingMatrix = orthogonalMatrix4([-alpha, -beta, 0], [0, 0, 0]);
