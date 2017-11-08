@@ -1,4 +1,5 @@
 // 全局变量
+var isMobile = false;
 var canvas, cw, ch, aspectRatio/* = 16/9*/, gl;
 var scene = {
     perspMatrix: [],    // 从视图坐标射影变换到裁剪坐标，产生透视效果
@@ -11,6 +12,9 @@ var scene = {
 
 // 程序入口
 function entry(){
+    // 识别移动端
+    isMobile = /Android|webOS|iPhone|iPod|iPad|BlackBerry/i.test(navigator.userAgent) ? true : false;
+
     // 获取绘图环境
     canvas = document.getElementById("canvas");
     gl = canvas.getContext("experimental-webgl");

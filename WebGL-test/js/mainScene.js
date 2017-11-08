@@ -21,13 +21,16 @@ function mainScene() {
     scene.fps = 30;
 
     // 3. 事件响应函数
-    //canvas.addEventListener('mousedown', mousedownFunc);
-    canvas.addEventListener('touchstart', touchstartFunc);
-    window.addEventListener('mousemove', mousemoveFunc);
-    window.addEventListener('touchmove', touchmoveFunc);
-    //   注意这里用window的mouseup事件，以处理用户将鼠标移开canvas后释放的情况
-    //window.addEventListener('mouseup', mouseupFunc);
-    window.addEventListener('touchend', touchendFunc);
+    if (isMobile) {
+        canvas.addEventListener('touchstart', touchstartFunc);
+        window.addEventListener('touchmove', touchmoveFunc);
+        window.addEventListener('touchend', touchendFunc);
+    } else {
+        //canvas.addEventListener('mousedown', mousedownFunc);
+        window.addEventListener('mousemove', mousemoveFunc);
+        //   注意这里用window的mouseup事件，以处理用户将鼠标移开canvas后释放的情况
+        //window.addEventListener('mouseup', mouseupFunc);
+    }    
 }
 
 // 场景初始化与全局设置
@@ -159,7 +162,9 @@ function mousemoveFunc(event) {
 
 //   移动端
 function touchstartFunc(event) {
+    event.preventDefault(); // 阻止触发默认事件
     if (event.targetTouches.length == 1) {
+        scene.rotatingMatrix = identityMatrix4();
         lastMouseX = event.targetTouches[0].clientX;
         lastMouseY = event.targetTouches[0].clientY;
         draging = true;
@@ -170,7 +175,7 @@ function touchmoveFunc(event) {
     var x = event.targetTouches[0].clientX, y = event.targetTouches[0].clientY;
     if (event.targetTouches.length == 1) {
         if (draging) {
-            var factor = PI/4/ch/scene.fps;
+            var factor = PI/4/ch/scene.fps*2;
             var alpha = factor*(y-lastMouseY), beta = factor*(x-lastMouseX);
             // 注意这里绕x轴旋转其实改变的是y方向，x轴不变；y轴同理
             scene.rotatingMatrix = orthogonalMatrix4([-alpha, -beta, 0], [0, 0, 0]);
@@ -182,11 +187,11 @@ function touchendFunc(event) {
     if (event.targetTouches.length == 0) {
         if (draging) {
             draging = false;
-            scene.rotationMatrix = multiply4(
+            /*scene.rotationMatrix = multiply4(
                 scene.rotatingMatrix,
                 scene.rotationMatrix
-            );
-            scene.rotatingMatrix = identityMatrix4();
+            );*/
+            //scene.rotatingMatrix = identityMatrix4();
         }
     }
 }
