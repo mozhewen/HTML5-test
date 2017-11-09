@@ -6,6 +6,6 @@ HTML5 learning tasks
 
 + **WebGL-test**
 
-    Animation of rotating triangles. It can be used as a wallpaper. 
+    Animation of rotating triangles. It can be used as your desktop wallpaper. 
 
     Link: https://mozhewen.github.io/HTML5-test/WebGL-test/
