@@ -11,7 +11,7 @@ var scene = {
 }
 
 // 程序入口
-function entry(){
+function entry() {
     // 识别移动端
     isMobile = /Android|webOS|iPhone|iPod|iPad|BlackBerry/i.test(navigator.userAgent) ? true : false;
 
@@ -32,7 +32,7 @@ function entry(){
     elapse();   // 用于更新数据
 
     // 载入主场景
-    load_maniScene();
+    load_mainScene();
 }
 
 // onresize回调函数
@@ -44,7 +44,7 @@ function resizeCanvas() {
     } else if (cw/ch < aspectRatio) {
         ch = cw/aspectRatio;
     }*/
-    aspectRatio=cw/ch;
+    aspectRatio = cw/ch;
     canvas.width = cw;
     canvas.height = ch;
     gl.viewport(0, 0, cw, ch); // 定义GL视口位置

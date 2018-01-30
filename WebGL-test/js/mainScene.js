@@ -1,5 +1,5 @@
 // 加载外部资源（异步！）
-function load_maniScene() {
+function load_mainScene() {
     var vertexShaderScript = new Object(), fragmentShaderScript = new Object();
     var remain = {num:2}, 
         onfinishFunc = function() {
