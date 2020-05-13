@@ -1,11 +1,19 @@
 # HTML5-test
 
-HTML5 learning tasks
+Some demos illustrating new techniques of HTML5. 
 
 ## Description
 
 + **WebGL-test**
 
-    Animation of rotating triangles. It can be used as your desktop wallpaper. 
+    Rendering rotating triangles in 3D using WebGL. 
 
     Link: https://mozhewen.github.io/HTML5-test/WebGL-test/
+
++ **AudioContext-test**
+
+    More instantaneous way to play a sound, such as a key tone. 
+
++ **UserMedia-test**
+
+    Access user's camera from browser. 

@@ -1,0 +1,94 @@
+<!DOCTYPE HTML>
+<html>
+    <head>
+        <title>test</title>
+    </head>
+    <body>
+        <div>
+            <label>BPM: </label>
+            <input type="text" id="bpm"/>
+            <input type="button" value="OK" onclick="OK()"/>
+            <div id = "eps"></div>
+            <div id = "curTime"></div>
+        </div>
+        <script>
+            let context = new AudioContext();
+            let sound = null;
+            let bg = null;
+
+            let request = new XMLHttpRequest();
+            request.open('GET', 'mus/castanets.wav', true);
+            request.responseType = 'arraybuffer';
+            request.onload = function () {
+                context.decodeAudioData(request.response, function(buffer){
+                    sound = buffer;
+                    console.log('castanets - ok');
+                });
+            }
+            request.send();
+            let request2 = new XMLHttpRequest();
+            request2.open('GET', 'mus/claves.wav', true);
+            //request2.open('GET', 'mus/The Half.mp3', true);
+
+            request2.responseType = 'arraybuffer';
+            request2.onload = function () {
+                context.decodeAudioData(request2.response, function(buffer){
+                    bg = buffer;
+                    console.log('claves - ok');
+                });
+            }
+            request2.send();
+    
+            let bpminput = document.getElementById("bpm");
+            let eps = document.getElementById('eps');
+            let bpm = 60;
+            let status = 'stop';
+            let hd;
+
+            function play() {
+                let source_key = context.createBufferSource();
+                source_key.buffer = sound;
+                source_key.connect(context.destination);
+                source_key.start(0);
+                let now = new Date();
+                let nowms = now.getTime();
+                if (nowms - pastms > 30000/bpm) {
+                    eps.innerText = (nowms - pastms - Math.round(60000/bpm)).toString();
+                }else{
+                    eps.innerText = (nowms - pastms).toString();
+                }
+            }
+
+            function kyd(ev) {
+                if (status == 'play' && ev.key==' ') {
+                    play();
+                }
+            }
+            document.onkeydown = kyd;
+            let curTime = document.getElementById('curTime');
+            function timeloop() {
+                let source_bg = context.createBufferSource();
+                source_bg.buffer = bg;
+                source_bg.connect(context.destination);
+                source_bg.start(0);
+                let now = new Date();
+                pastms = now.getTime();
+                //setInterval(() => {curTime.innerText = context.currentTime.toString()}, 1000);
+            }
+
+            function OK() {
+                if (status == 'play') {
+                    clearInterval(hd);
+                    status = 'stop';
+                } else {
+                    bpm = bpminput.value;
+                    if (1 < bpm < 360) {
+                        //timeloop();
+                        hd = setInterval(timeloop, 60000/bpm);
+                        status = 'play';
+                    }
+                }
+            }
+        </script>
+    </body>
+</html>
