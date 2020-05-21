@@ -18,6 +18,10 @@ Some demos illustrating new techniques of HTML5.
 
     Access user's camera from browser. 
 
++ **man2html**
+
+    An extremely simple backend which converts Linux manual pages into html pages for a better typesetting (if not worse). 
+
 + **too_many_elements**
 
     Too many elements = 要素过多
