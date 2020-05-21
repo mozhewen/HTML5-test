@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>要素过多系列</title>
+        <meta charset="UFT-8"/>
+        <link rel="icon" href="favicon.ico"> <!-- 如何设置页面图标 -->>
+        <style>
+            /* 自动识别横屏竖屏 */
+            @media screen and (min-aspect-ratio: 1/1) {
+                body {
+                    background-color: aqua;
+                }
+            }
+            /* 设置节编号 */
+            body {
+                counter-reset: sec;
+            }
+            h2::before {
+		        counter-increment: sec; /* 自动将计数器加 1 */
+		        content: counter(sec) ". "; /* 获取计数器值，把它填写在 content 中 */
+		    }
+
+            /* 1. */
+            #tri {
+                margin-bottom: 20px;
+                height: 10px;
+            }
+            #tri::before{
+                position:absolute;
+                content: "";
+                width:0;
+                height: 0;
+                border-right: 6px solid yellow;
+                border-top: 7px solid transparent;
+                border-bottom: 7px solid transparent;
+            }
+
+            /* 2. */
+            #box {
+                position: relative;
+                height: 200px;
+            }
+            .inner {
+                width:100px;
+                height:100px;
+                position: absolute;
+            }
+            .sub {
+                width:50px;
+                height:50px;
+                position: relative;
+                left:25px;
+                top: 25px;
+            }
+            #innerA {
+                background-color: brown;
+                left:15px;
+                top:15px;
+                border-style: solid;
+            }
+            #subA {
+                background-color: red;
+                z-index: 1;
+            }
+            #innerB {
+                background-color: darkgreen;
+                left:10px;
+                top:10px;
+            }
+            #subB {
+                background-color: green;
+                z-index: 1;
+            }
+
+
+            /* 3. */
+            .btn-txt{
+                font-weight: bolder;
+                color:whitesmoke;
+            }
+            .btn{
+                margin: 10px;
+                width: 100px;
+                height: 40px;
+                border-radius: 10px;
+                background-color: teal;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                box-shadow: 1px 1px 3px black;
+            }
+            .btn:hover{
+                box-shadow: none;
+                transform: translate(1px, 1px);
+            }
+            .btn:active{
+                box-shadow: 1px 1px 3px black inset;
+                transform: translate(1px, 1px);
+            }
+            .btn:active .btn-txt{
+                color: yellow;
+                text-shadow: 0px 0px 5px lightyellow;
+                transform: translate(1px, 1px);
+            }
+
+            /* 5. */
+            #scr{
+                width: 200px;
+                height: 200px;
+                overflow: scroll;
+                padding: 15px;
+            }
+            #con {
+                width: 400px;
+                height: 100px;
+                background-color: blueviolet;
+            }
+
+            /* 7. */
+            #a::before{
+                content: "adsadasd";
+            }
+            #a {
+                height: 200px;
+                background: conic-gradient(pink, yellow);
+            }
+
+            /* 8. */
+            #imgout{
+                 width: 200px;
+            }
+            .img{
+                /* float: left; */
+                display:inline-grid;
+                /* vertical-align:baseline; */
+                background-color: brown;
+                height: 100px;
+            }
+        </style>
+    </head>
+    <body>
+        <h2> 使用::before绘制一个小三角，可用于对话气泡  </h2>
+        <div id='tri'></div>
+
+
+        <h2> z-index </h2>
+        <div id="box">
+            <div id="innerA" class="inner">
+                <div id="subA" class="sub"></div>
+            </div>
+            <div id="innerB" class="inner">
+                <div id="subB" class="sub"></div>
+            </div>
+        </div>
+
+
+        <h2> 一个按钮的例子  </h2>
+        <div class='btn'>
+            <span class='btn-txt'>aaa</span>
+        </div>
+
+
+        <h2> Vue.js测试 </h2>
+        <div id="vue">
+            {{ a.b }} {{ s }} {{ test }}
+            <button-counter></button-counter>
+            <button-counter></button-counter>
+            <button-counter></button-counter>
+        </div>
+        <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+        <script>
+            // 定义一个名为 button-counter 的新组件
+            Vue.component('button-counter', {
+                data: function () {
+                    return {count: 0};
+                },
+                methods: {
+                    inc: function () {
+                        console.log(this);
+                        this.count++;
+                    }
+                },
+                template: '<button v-on:click="inc()">You clicked me {{ count }} times.</button>'
+            })
+            let data = {a: {b: 123}, s:"Hahaha"};
+            let vm = new Vue({
+                el:"#vue", 
+                data,
+                computed:{
+                    test: function() {
+                        console.log('Hohoho');
+                        return this.a.b + this.s;
+                    }
+                }
+            });
+        </script>
+
+
+        <h2> 容器和内容，研究各种宽高之间的关系 </h2>
+        <div id="scr"> <div id="con"></div> </div>
+
+
+        <h2> 一个表单的例子 </h2>
+        <form method="get" action="aa.asp">
+            <textarea name = 'ta' style="resize: none;"></textarea>
+            <input type="submit">
+        </form>
+
+
+        <h2> 锥型渐变 </h2>
+        <div id="a"></div>
+
+
+        <h2> 行内元素排版 </h2>
+        <div id='imgout'>
+            <script>
+                // JS 代码的作用域是全局的
+                let a = document.getElementById('scr');
+                a.innerHTML+='From Sec. 8';
+            </script>
+            发 是地方是的是地方是地方是的是地方是的是是的公司的 撒说法发
+            <img src="favicon.ico" id='img'/>
+            dfdffds
+            fsfsd
+            <div class="img">sss<br>sd</div>
+            撒了房间里空间了解离开建立了家乐福就疯狂浪费静安寺了就考虑附近阿卡卡十六届发是了附近是了离开
+        </div>
+        <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+
+        <h2> 一个 http 请求的例子 </h2>
+        <div id="res"></div>
+        <script>
+            let req = new XMLHttpRequest()
+            function reqListener() {
+                document.getElementById('res').innerText = this.responseText;
+            }
+            req.addEventListener("load", reqListener);
+            req.open('GET', 'content.txt')
+            req.send()
+        </script>
+
+
+        <h2> iframe 引用B站 </h2>
+        <iframe src="https://player.bilibili.com/player.html?aid=455303650&bvid=BV1y5411t74D&cid=180929228&page=1" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true"> </iframe>
+
+
+    </body>
+</html>
